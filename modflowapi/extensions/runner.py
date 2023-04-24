@@ -1,8 +1,9 @@
-from .. import ModflowApi
-from .apisimulation import ApiSimulation
 import pathlib
 import platform
 from enum import Enum
+
+from .. import ModflowApi
+from .apisimulation import ApiSimulation
 
 
 class Callbacks(Enum):

@@ -6,7 +6,6 @@ from tempfile import gettempdir
 import pytest
 from filelock import FileLock
 
-
 __mf6_examples = "mf6_examples"
 __mf6_examples_path = Path(gettempdir()) / __mf6_examples
 __mf6_examples_lock = FileLock(Path(gettempdir()) / f"{__mf6_examples}.lock")
@@ -30,6 +29,7 @@ def get_mf6_examples_path() -> Path:
         return __mf6_examples_path
     finally:
         __mf6_examples_lock.release()
+
 
 def is_nested(namfile) -> bool:
     p = Path(namfile)
