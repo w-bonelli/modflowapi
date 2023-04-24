@@ -329,7 +329,6 @@ def test_rhs_hcof_advanced(tmpdir):
     def callback(sim, step):
         model = sim.test_model
         if step == Callbacks.timestep_start:
-
             wel = model.wel
             rhs = wel.rhs
             rhs[0:3] = [-150, -100, -50]
@@ -341,7 +340,7 @@ def test_rhs_hcof_advanced(tmpdir):
             )
 
             hcof = wel.hcof
-            hcof[0: 3] = np.abs(rhs)[0:3] / 2
+            hcof[0:3] = np.abs(rhs)[0:3] / 2
 
             wel.hcof = hcof
 
@@ -352,13 +351,13 @@ def test_rhs_hcof_advanced(tmpdir):
             )
 
             rhs *= 1.2
-            wel.set_advanced_var('rhs', rhs)
+            wel.set_advanced_var("rhs", rhs)
             rhs3 = wel.rhs
 
             np.testing.assert_allclose(
                 rhs,
                 rhs3,
-                err_msg="set advanced var method not working properly"
+                err_msg="set advanced var method not working properly",
             )
 
     name = "dis_model"
