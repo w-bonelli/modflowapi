@@ -83,8 +83,11 @@ jobs:
           name: changelog
           path: CHANGELOG.md
       
+      - name: Lint Python files
+        run: ruff check .
+
       - name: Format Python files
-        run: python scripts/pull_request_prepare.py
+        run: ruff format .
 
       - name: Push release branch
         env:
