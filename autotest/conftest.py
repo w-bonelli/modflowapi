@@ -72,9 +72,20 @@ def pytest_generate_tests(metafunc):
         for model_name, model_namfiles in groupby(
             namfiles, key=simulation_name_from_model_path
         ):
-            models = sorted(
-                list(model_namfiles)
-            )  # sort in alphabetical order (gwf < gwt)
+            models = []
+            model_namfiles = list(model_namfiles)
+            if len(model_namfiles) > 1:
+                # trap gwf models as first set of models
+                idxs = [
+                    ix for ix, _ in enumerate(model_namfiles) if "gwf" in _
+                ]
+                if len(idxs) > 0:
+                    for ix in idxs[::-1]:
+                        models.append(model_namfiles.pop(ix))
+
+            models += list(
+                sorted(model_namfiles)
+            )  # sort remaining models in alphabetical order (gwe < gwt < prt)
             simulations.append(models)
             print(
                 f"Simulation {model_name} has {len(models)} model(s):\n"
