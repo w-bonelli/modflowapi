@@ -308,8 +308,11 @@ class ApiSimulation:
 
                 solution_names.append(t[0])
 
+        idp_names = [i for i in mf6.get_value("__INPUT__/SIM/NAM/SLNMNAMES")]
         solution_types = [
-            i[:-1].lower() for i in mf6.get_value("__INPUT__/SIM/NAM/SLNTYPE")
+            i[:-1].lower()
+            for ix, i in enumerate(mf6.get_value("__INPUT__/SIM/NAM/SLNTYPE"))
+            if idp_names[ix]
         ]
 
         tmpmdl = ApiMbase(mf6, "", {})
