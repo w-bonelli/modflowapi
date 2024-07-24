@@ -173,7 +173,7 @@ pkgvars = {
     "sln-ems": [
         "icnvg",
         "ttsoln",
-    ]
+    ],
 }
 
 
