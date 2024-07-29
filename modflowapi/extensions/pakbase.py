@@ -121,6 +121,12 @@ pkgvars = {
         "auxname_cst",
         "auxvar",
     ],
+    # prt model
+    "mip": [
+        "porosity",
+        "retfactor",
+        "izone"
+    ],
     # exchange model
     "gwf-gwf": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc"],
     "gwt-gwt": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc"],
