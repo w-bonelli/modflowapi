@@ -164,12 +164,17 @@ class ApiModel(ApiMbase):
             "riv": ListPackage,
             "sto": ArrayPackage,
             "wel": ListPackage,
-            # gwt/gwe
-            "adv": ArrayPackage,
+            # gwt
+            "dsp": ArrayPackage,
             "cnc": ListPackage,
             "ist": ArrayPackage,
             "mst": ArrayPackage,
             "src": ListPackage,
+            # gwe
+            "cnd": ArrayPackage,
+            "est": ArrayPackage,
+            "cpt": ListPackage,
+            "esl": ListPackage,
             # prt
             "mip": ArrayPackage,
         }

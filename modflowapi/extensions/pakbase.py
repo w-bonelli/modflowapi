@@ -91,8 +91,29 @@ pkgvars = {
         "auxname_cst",
         "auxvar",
     ],
+    # gwe model
+    "cnd": ["alh", "alv", "ath1", "ath2", "atv", "kts"],
+    "est": ["porosity", "decay", "cps", "rhos"],
+    "cpt": [
+        "maxbound",
+        "nbound",
+        "nodelist",
+        ("bound", ("temp",)),
+        "naux",
+        "auxname_cst",
+        "auxvar",
+    ],
+    "esl": [
+        "maxbound",
+        "nbound",
+        "nodelist",
+        ("bound", ("senerrate",)),
+        "naux",
+        "auxname_cst",
+        "auxvar",
+    ],
     # gwt model
-    "adv": ["diffc", "alh", "alv", "ath1", "ath2", "atv"],
+    "dsp": ["diffc", "alh", "alv", "ath1", "ath2", "atv"],
     "cnc": [
         "maxbound",
         "nbound",
@@ -124,8 +145,9 @@ pkgvars = {
     # prt model
     "mip": ["porosity", "retfactor", "izone"],
     # exchange model
-    "gwf-gwf": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc"],
-    "gwt-gwt": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc"],
+    "gwf-gwf": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc", "hwva"],
+    "gwt-gwt": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc", "hwva"],
+    "gwe-gwe": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc", "hwva"],
     # simulation
     "ats": [
         "maxats",
