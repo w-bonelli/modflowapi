@@ -198,7 +198,7 @@ jobs:
           pip install git+https://git@github.com/MODFLOW-USGS/modflow-devtools@develop
           pip install git+https://git@github.com/modflowpy/flopy@develop
           pip install .[test]
-          
+
       - name: Install modflow6 nightly build
         uses: modflowpy/install-modflow-action@v1
         with:
@@ -212,7 +212,9 @@ jobs:
 
       - name: Build mf6-examples
         working-directory: modflow6-examples/autotest
-        run: pytest -v -n=auto --init test_scripts.py
+        run: |
+          pytest -v -n=auto --init test_scripts.py
+          pytest -v -n=auto test_scripts.py -k "mp7-p02 or mp7-p04"
 
       - name: Run autotests
         working-directory: ./autotest
