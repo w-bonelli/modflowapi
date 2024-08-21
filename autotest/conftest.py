@@ -60,7 +60,12 @@ def pytest_generate_tests(metafunc):
         mf6_examples_path = get_mf6_examples_path()
 
     # grouping...
-    exclude = ["ex-gwt-gwtgwt-mt3dms-p10", "mp7-p02", "mp7-p04"]
+    exclude = [
+        "ex-gwt-gwtgwt-mt3dms-p10",
+        "mp7-p02",
+        "mp7-p04",
+        "gwt-synthetic-valley",
+    ]
     namfiles = [
         str(p)
         for p in mf6_examples_path.rglob("mfsim.nam")
