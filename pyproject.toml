@@ -51,7 +51,8 @@ test = [
     "scipy",
     "pyshp",
     "shapely",
-    "rasterio"
+    "rasterio",
+    "rasterstats"
 ]
 lint = [
     "ruff",
