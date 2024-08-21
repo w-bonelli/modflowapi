@@ -176,7 +176,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Checkout mf6-examples
         uses: actions/checkout@v4
