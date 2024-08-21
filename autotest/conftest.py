@@ -64,7 +64,7 @@ def pytest_generate_tests(metafunc):
         "ex-gwt-gwtgwt-mt3dms-p10",
         "mp7-p02",
         "mp7-p04",
-        "gwt-synthetic-valley",
+        "synthetic-valley",
     ]
     namfiles = [
         str(p)
