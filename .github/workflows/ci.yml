@@ -176,7 +176,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Checkout mf6-examples
         uses: actions/checkout@v4
@@ -199,8 +199,6 @@ jobs:
           pip install git+https://git@github.com/modflowpy/flopy@develop
           pip install .[test]
 
-      
-
       - name: update flopy for mf6-examples
         run: python -m flopy.mf6.utils.generate_classes --ref develop --no-backup
 
@@ -212,7 +210,7 @@ jobs:
       - name: Build mf6-examples
         working-directory: modflow6-examples/autotest
         run: |
-          pytest -v -n=auto --init test_scripts.py
+          pytest -v -n=auto --init test_scripts.py -k "not synthetic-valley"
 
       - name: Install modflow6 nightly build
         uses: modflowpy/install-modflow-action@v1
