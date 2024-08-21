@@ -47,7 +47,8 @@ test = [
     "pytest-order",
     "pytest-xdist",
     "GitPython",
-    "pooch"
+    "pooch",
+    "scipy"
 ]
 lint = [
     "ruff",

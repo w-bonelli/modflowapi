@@ -198,6 +198,7 @@ jobs:
           pip install git+https://git@github.com/MODFLOW-USGS/modflow-devtools@develop
           pip install git+https://git@github.com/modflowpy/flopy@develop
           pip install .[test]
+          get-modflow :flopy
 
       - name: Install modflow6 nightly build
         uses: modflowpy/install-modflow-action@v1
