@@ -48,7 +48,9 @@ test = [
     "pytest-xdist",
     "GitPython",
     "pooch",
-    "scipy"
+    "scipy",
+    "pyshp",
+    "shapely"
 ]
 lint = [
     "ruff",
