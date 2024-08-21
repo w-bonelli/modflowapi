@@ -91,8 +91,29 @@ pkgvars = {
         "auxname_cst",
         "auxvar",
     ],
+    # gwe model
+    "cnd": ["alh", "alv", "ath1", "ath2", "atv", "kts"],
+    "est": ["porosity", "decay", "cps", "rhos"],
+    "cpt": [
+        "maxbound",
+        "nbound",
+        "nodelist",
+        ("bound", ("temp",)),
+        "naux",
+        "auxname_cst",
+        "auxvar",
+    ],
+    "esl": [
+        "maxbound",
+        "nbound",
+        "nodelist",
+        ("bound", ("senerrate",)),
+        "naux",
+        "auxname_cst",
+        "auxvar",
+    ],
     # gwt model
-    "adv": ["diffc", "alh", "alv", "ath1", "ath2", "atv"],
+    "dsp": ["diffc", "alh", "alv", "ath1", "ath2", "atv"],
     "cnc": [
         "maxbound",
         "nbound",
@@ -121,9 +142,12 @@ pkgvars = {
         "auxname_cst",
         "auxvar",
     ],
+    # prt model
+    "mip": ["porosity", "retfactor", "izone"],
     # exchange model
-    "gwf-gwf": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc"],
-    "gwt-gwt": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc"],
+    "gwf-gwf": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc", "hwva"],
+    "gwt-gwt": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc", "hwva"],
+    "gwe-gwe": ["nexg", "nodem1", "nodem2", "cl1", "cl2", "ihc", "hwva"],
     # simulation
     "ats": [
         "maxats",
@@ -147,7 +171,7 @@ pkgvars = {
         "tsmult",
     ],
     # solution package
-    "sln": [
+    "sln-ims": [
         "mxiter",
         "dvclose",
         "gamma",
@@ -169,6 +193,10 @@ pkgvars = {
         "north",
         "iscl",
         "iord",
+    ],
+    "sln-ems": [
+        "icnvg",
+        "ttsoln",
     ],
 }
 
@@ -599,6 +627,10 @@ class ScalarPackage(PackageBase):
         elif item in self._variables._ptrs:
             self._variables.set_value(item, value)
 
+        elif item in ("mxiter",):
+            # hack for sln-ems
+            super().__setattr__(item, value)
+
         else:
             raise AttributeError(f"{item}")
 
@@ -690,21 +722,26 @@ class ApiSlnPackage(ScalarPackage):
         package name (in the mf6 variables)
     sim_package : bool
         boolean flag for simulation level packages. Ex. TDIS, IMS
+    sln_type : str
+        ackronymn for the solution package type, default is "ims"
     """
 
-    def __init__(self, sim, pkg_name):
+    def __init__(self, sim, pkg_name, pkg_type="ims"):
         from .apimodel import ApiMbase
 
-        super().__init__(sim, "sln", pkg_name, sim_package=True)
+        super().__init__(sim, f"sln-{pkg_type}", pkg_name, sim_package=True)
 
-        mdl = ApiMbase(
-            sim.mf6, pkg_name.upper(), pkg_types={"ims": ScalarPackage}
-        )
-        imslin = ScalarPackage(mdl, "ims", "IMSLINEAR")
-        for key, ptr in imslin._variables._ptrs.items():
-            if key in self._variables._ptrs:
-                key = f"{imslin.pkg_type}_{key}".lower()
-            self._variables._ptrs[key] = ptr
+        if pkg_type in ("ims",):
+            mdl = ApiMbase(
+                sim.mf6, pkg_name.upper(), pkg_types={pkg_type: ScalarPackage}
+            )
+            imslin = ScalarPackage(mdl, "ims", "IMSLINEAR")
+            for key, ptr in imslin._variables._ptrs.items():
+                if key in self._variables._ptrs:
+                    key = f"{imslin.pkg_type}_{key}".lower()
+                self._variables._ptrs[key] = ptr
+        else:
+            self.mxiter = 10
 
 
 def package_factory(pkg_type, basepackage):

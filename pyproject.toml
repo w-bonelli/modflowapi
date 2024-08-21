@@ -46,6 +46,13 @@ test = [
     "pytest!=8.1.0",
     "pytest-order",
     "pytest-xdist",
+    "GitPython",
+    "pooch",
+    "scipy",
+    "pyshp",
+    "shapely",
+    "rasterio",
+    "rasterstats"
 ]
 lint = [
     "ruff",

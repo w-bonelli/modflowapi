@@ -308,13 +308,21 @@ class ApiSimulation:
 
                 solution_names.append(t[0])
 
+        idp_names = [i for i in mf6.get_value("__INPUT__/SIM/NAM/SLNMNAMES")]
+        solution_types = [
+            i[:-1].lower()
+            for ix, i in enumerate(mf6.get_value("__INPUT__/SIM/NAM/SLNTYPE"))
+            if idp_names[ix]
+        ]
+
         tmpmdl = ApiMbase(mf6, "", {})
         solution_names = list(set(solution_names))
         solution_dict = {}
         for name in solution_names:
             sid_var_addr = mf6.get_var_address("ID", name)
             sid = mf6.get_value(sid_var_addr)[0]
-            sln = ApiSlnPackage(tmpmdl, name)
+            slntype = solution_types[sid - 1]
+            sln = ApiSlnPackage(tmpmdl, name, pkg_type=slntype)
             solution_dict[sid] = sln
 
         solutions = solution_dict

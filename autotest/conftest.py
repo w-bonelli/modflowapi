@@ -33,21 +33,37 @@ def get_mf6_examples_path() -> Path:
         __mf6_examples_lock.release()
 
 
+def pytest_addoption(parser):
+    parser.addoption("--mf6-examples-path", action="store", default=None)
+
+
 def is_nested(namfile) -> bool:
     p = Path(namfile)
     if not p.is_file() or not p.name.endswith(".nam"):
         raise ValueError(f"Expected a namfile path, got {p}")
-
     return p.parent.parent.name != __mf6_examples
 
 
 def pytest_generate_tests(metafunc):
     # examples to skip:
     #   - ex-gwtgwt-mt3dms-p10: https://github.com/MODFLOW-USGS/modflow6/pull/1008
-    exclude = ["ex-gwt-gwtgwt-mt3dms-p10"]
+    option_value = metafunc.config.option.mf6_examples_path
+    t = metafunc.fixturenames
+    if (
+        "mf6_example_namfiles" in metafunc.fixturenames
+        and option_value is not None
+    ):
+        mf6_examples_path = Path(option_value)
+        global __mf6_examples
+        __mf6_examples = str(mf6_examples_path.name)
+    else:
+        mf6_examples_path = get_mf6_examples_path()
+
+    # grouping...
+    exclude = ["ex-gwt-gwtgwt-mt3dms-p10", "mp7-p02", "mp7-p04"]
     namfiles = [
         str(p)
-        for p in get_mf6_examples_path().rglob("mfsim.nam")
+        for p in mf6_examples_path.rglob("mfsim.nam")
         if not any(e in str(p) for e in exclude)
     ]
 
@@ -72,9 +88,20 @@ def pytest_generate_tests(metafunc):
         for model_name, model_namfiles in groupby(
             namfiles, key=simulation_name_from_model_path
         ):
-            models = sorted(
-                list(model_namfiles)
-            )  # sort in alphabetical order (gwf < gwt)
+            models = []
+            model_namfiles = list(model_namfiles)
+            if len(model_namfiles) > 1:
+                # trap gwf models as first set of models
+                idxs = [
+                    ix for ix, _ in enumerate(model_namfiles) if "gwf" in _
+                ]
+                if len(idxs) > 0:
+                    for ix in idxs[::-1]:
+                        models.append(model_namfiles.pop(ix))
+
+            models += list(
+                sorted(model_namfiles)
+            )  # sort remaining models in alphabetical order (gwe < gwt < prt)
             simulations.append(models)
             print(
                 f"Simulation {model_name} has {len(models)} model(s):\n"

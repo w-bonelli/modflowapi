@@ -176,10 +176,16 @@ jobs:
         shell: bash
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Checkout mf6-examples
+        uses: actions/checkout@v4
+        with:
+          repository: MODFLOW-USGS/modflow6-examples
+          path: modflow6-examples
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
@@ -190,15 +196,33 @@ jobs:
           python -m pip install --upgrade pip
           pip install git+https://git@github.com/Deltares/xmipy@develop
           pip install git+https://git@github.com/MODFLOW-USGS/modflow-devtools@develop
+          pip install git+https://git@github.com/modflowpy/flopy@develop
           pip install .[test]
+
+      
+
+      - name: update flopy for mf6-examples
+        run: |
+          get-modflow :flopy
+          python -m flopy.mf6.utils.generate_classes --ref develop --no-backup
+
+      - name: Install modflow6 for modflow6-examples
+        uses: modflowpy/install-modflow-action@v1
+        with:
+          path: ${{ github.workspace }}/modflow6-examples/autotest
+
+      - name: Build mf6-examples
+        working-directory: modflow6-examples/autotest
+        run: |
+          pytest -v -n=auto --init test_scripts.py
 
       - name: Install modflow6 nightly build
         uses: modflowpy/install-modflow-action@v1
         with:
           path: ${{ github.workspace }}/autotest
           repo: modflow6-nightly-build
-      
+
       - name: Run autotests
         working-directory: ./autotest
         shell: bash -l {0}
-        run: pytest -v -n auto -m "mf6 and not extensions"
+        run: pytest -v -n=auto test_mf6_examples.py --mf6-examples-path=../modflow6-examples/examples
