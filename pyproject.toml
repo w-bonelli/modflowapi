@@ -50,7 +50,8 @@ test = [
     "pooch",
     "scipy",
     "pyshp",
-    "shapely"
+    "shapely",
+    "rasterio"
 ]
 lint = [
     "ruff",
