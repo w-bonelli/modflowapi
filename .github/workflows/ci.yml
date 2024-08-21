@@ -199,21 +199,28 @@ jobs:
           pip install git+https://git@github.com/modflowpy/flopy@develop
           pip install .[test]
 
-      - name: Install modflow6 nightly build
-        uses: modflowpy/install-modflow-action@v1
-        with:
-          path: ${{ github.workspace }}/autotest
-          repo: modflow6-nightly-build
+      
 
       - name: update flopy for mf6-examples
         run: |
           get-modflow :flopy
           python -m flopy.mf6.utils.generate_classes --ref develop --no-backup
 
+      - name: Install modflow6 for modflow6-examples
+        uses: modflowpy/install-modflow-action@v1
+        with:
+          path: ${{ github.workspace }}/modflow6-examples/autotest
+
       - name: Build mf6-examples
         working-directory: modflow6-examples/autotest
         run: |
           pytest -v -n=auto --init test_scripts.py
+
+      - name: Install modflow6 nightly build
+        uses: modflowpy/install-modflow-action@v1
+        with:
+          path: ${{ github.workspace }}/autotest
+          repo: modflow6-nightly-build
 
       - name: Run autotests
         working-directory: ./autotest
