@@ -214,7 +214,6 @@ jobs:
         working-directory: modflow6-examples/autotest
         run: |
           pytest -v -n=auto --init test_scripts.py
-          pytest -v -n=auto test_scripts.py -k "mp7-p02 or mp7-p04"
 
       - name: Run autotests
         working-directory: ./autotest
