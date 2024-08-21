@@ -202,9 +202,7 @@ jobs:
       
 
       - name: update flopy for mf6-examples
-        run: |
-          get-modflow :flopy
-          python -m flopy.mf6.utils.generate_classes --ref develop --no-backup
+        run: python -m flopy.mf6.utils.generate_classes --ref develop --no-backup
 
       - name: Install modflow6 for modflow6-examples
         uses: modflowpy/install-modflow-action@v1
